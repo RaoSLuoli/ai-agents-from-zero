@@ -212,8 +212,6 @@ pip install langchain-deepseek -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 ![百炼模型广场：浏览可选模型及在列表中展示的模型标识](images/10/10-4-1-2.jpeg)
 
-![模型详情与调用名](images/10/10-4-2-3.jpeg)
-
 ![模型详情页：查看实际调用时使用的模型名（与界面展示名称可能略有差异，以详情/API 文档为准）](images/10/10-4-1-3.jpeg)
 
 ![模型名示例：如 qwen-plus、qwen3-max 等在代码 `model=` 中填写的字符串](images/10/10-4-1-4.jpeg)

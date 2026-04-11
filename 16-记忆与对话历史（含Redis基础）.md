@@ -279,8 +279,6 @@ LangChain 早期有一个比较有代表性的类，叫 `ConversationChain`。
 
 LangChain 提供了多种聊天历史实现（如内存、文件、Redis、Elasticsearch、DynamoDB 等），核心差别主要在于**是否持久化、是否适合多实例共享**。
 
-![常用消息历史组件及特性对比](images/16/16-5-1-2.jpeg)
-
 常见实现可以先这样理解：
 
 | 组件名称                     | 存储方式     | 适合什么场景                   |
