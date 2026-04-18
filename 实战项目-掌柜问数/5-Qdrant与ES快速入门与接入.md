@@ -120,7 +120,7 @@
 
 ### 1.3 理解 Qdrant 核心概念
 
-![指标元数据按名称、描述、别名分别向量化并写入向量库的映射示例](images/5/5-1-1-1.png)
+![指标元数据按名称、描述、别名分别向量化并写入向量库的映射示例](images/5/5-1-3-1.png)
 
 Qdrant 官方对 `collection` 的描述很清楚：**同一个 collection 里的 points 使用相同维度，并按同一种距离度量进行比较。**
 
@@ -265,7 +265,7 @@ if __name__ == "__main__":
 执行文件验证，成功：
 
 ```bash
-(shopkeeper-agent-backend) tools@ToolsMacBook-Pro shopkeeper-agent-backend % python3 examples/qdrant_quickstart_demo.py
+(shopkeeper-agent-backend) didilili@DidililiMacBook-Pro shopkeeper-agent-backend % python3 -m examples.qdrant_quickstart_demo
 
 1. 已创建集合：quickstart_demo
 2. 已写入 3 个向量点。
@@ -394,6 +394,13 @@ if __name__ == "__main__":
 
     # 运行异步测试函数
     asyncio.run(test())
+```
+
+执行文件验证，成功：
+
+```bash
+(shopkeeper-agent-backend) didilili@DidililiMacBook-Pro shopkeeper-agent-backend % python3 -m app.clients.qdrant_client_manager
+points=[ScoredPoint(id=33, version=4, score=0.9287777, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=45, version=4, score=0.9019778, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=58, version=4, score=0.90187067, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=75, version=4, score=0.8799222, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=66, version=4, score=0.87921834, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=87, version=4, score=0.8753782, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=73, version=4, score=0.86765623, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=27, version=4, score=0.86216307, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=16, version=4, score=0.8618801, payload={}, vector=None, shard_key=None, order_value=None), ScoredPoint(id=69, version=4, score=0.8546801, payload={}, vector=None, shard_key=None, order_value=None)]
 ```
 
 **代码分析：**
@@ -578,8 +585,7 @@ index_mappings = {
 1. 直接调用 `REST API`
 2. 在程序里使用语言客户端
 
-如果只是做测试或调试，第一种方式非常方便。  
-例如，我们可以在 `Kibana` 的 `Dev Tools` 里直接执行接口，验证索引是否创建成功、文档是否写入成功、查询语句是否返回预期结果。
+如果只是做测试或调试，第一种方式非常方便。例如，我们可以在 `Kibana` 的 `Dev Tools` 里直接执行接口，验证索引是否创建成功、文档是否写入成功、查询语句是否返回预期结果。
 
 在这个项目里，更常见的真实开发方式是第二种，也就是在 Python 代码中使用 `elasticsearch` 客户端库。这也解释了为什么我们接下来会专门封装一个 `ESClientManager`。
 
@@ -868,7 +874,7 @@ if __name__ == "__main__":
 执行文件验证，成功：
 
 ```bash
-(shopkeeper-agent-backend) tools@ToolsMacBook-Pro shopkeeper-agent-backend % python3 app/clients/es_client_manager.py
+(shopkeeper-agent-backend) didilili@DidililiMacBook-Pro shopkeeper-agent-backend % python3 -m app.clients.es_client_manager
 {'took': 5, 'timed_out': False, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}, 'hits': {'total': {'value': 1, 'relation': 'eq'}, 'max_score': 1.2067741, 'hits': [{'_index': 'my-books', '_id': 'SDB_np0BrzSqcXAMSMVk', '_score': 1.2067741, '_source': {'name': 'Brave New World', 'author': 'Aldous Huxley', 'release_date': '1932-06-01', 'page_count': 268}}]}}
 ```
 

@@ -88,5 +88,4 @@ parallel_chain.get_graph().print_ascii()
             +---------------------------------+
             | Parallel<chinese,english>Output |
             +---------------------------------+
-(.venv) tools@ToolsMacBook-Pro 06-lcel %
 """

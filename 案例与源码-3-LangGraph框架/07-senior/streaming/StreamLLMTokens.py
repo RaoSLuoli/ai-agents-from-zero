@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
 """
 【输出示例】
-(.venv) tools@ToolsMacBook-Pro streaming % python3 StreamLLMTokens.py
+(.venv) didilili@DidililiMacBook-Pro streaming % python3 StreamLLMTokens.py
 开始调用 node 节点
 我的一天  
 
