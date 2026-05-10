@@ -94,7 +94,7 @@
 
 **Docker 是唯一前置依赖**，用于创建隔离运行环境：
 
-如果你对镜像、容器、Compose、volume、端口映射这些概念还不熟，可以先看 [第 8.1 章 Docker 入门与 Dify 部署排障](8.1-Docker入门与Dify部署常见问题.md)。本章只保留 Coze 部署所需步骤，不再重复展开 Docker 基础。
+如果你对镜像、容器、Compose、volume、端口映射这些概念还不熟，可以先看 [第 8.1 章 Docker 入门与 Dify 部署常见问题](8.1-Docker入门与Dify部署常见问题.md)。本章只保留 Coze 部署所需步骤，不再重复展开 Docker 基础。
 
 #### ① 下载安装包
 
