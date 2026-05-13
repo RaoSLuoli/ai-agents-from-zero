@@ -52,6 +52,7 @@
   - [第 24 章 LangGraph API：节点、边与进阶](24-LangGraphAPI：节点、边与进阶.md)
   - [第 25 章 LangGraph 高级特性](25-LangGraph高级特性.md)
   - [第 26 章 LangGraph 多智能体与 A2A](26-LangGraph多智能体与A2A.md)
+  - [第 27 章 Skills 技能与 AI 编程工具实践](27-Skills技能与AI编程工具实践.md)
 
 - 04 企业级项目实战
   - 电商问数（已完结）
@@ -80,5 +81,5 @@
     - [第 4 章 接入 LangGraph 与 LangChain](实战项目-深度研搜/4-接入LangGraph与LangChain.md)
     - [第 5 章 人机协作与中断恢复](实战项目-深度研搜/5-人机协作与中断恢复.md)
     - [第 6 章 长期记忆与 Backend 存储](实战项目-深度研搜/6-长期记忆与Backend存储.md)
-    - [第 7 章 中间件机制与执行链路治理](实战项目-深度研搜/7-中间件机制与执行链路治理.md)
+    - [第 7 章 中间件机制与 Skills 配置](实战项目-深度研搜/7-中间件机制与Skills配置.md)
 - [更新日志](教程更新日志.md)

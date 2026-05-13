@@ -855,6 +855,179 @@ WebSocket 层负责把事件发给前端；中间件负责在 Agent 执行链路
 
 这里要注意一个边界：不是所有工具都适合重试。搜索、读取网页这类“多调一次问题不大”的工具可以重试；删除文件、删除数据库、发送邮件、扣款这类有副作用的工具，不要轻易自动重试，更适合走人工审批或业务幂等设计。
 
+## 9、DeepAgents 中的 Skill 配置
+
+前面几章已经讲过工具、子智能体、Backend 和中间件。DeepAgents 里还有一个常用扩展能力：`skills`。
+
+这里不再展开 Skill 的完整概念，完整基础知识放到 [第 27 章 Agent Skills 智能体技能与 AI 编程工具实践](../27-Agent%20Skills智能体技能与AI编程工具实践.md)。本节只解决一个工程问题：**在 DeepAgents 中，怎么把 Skill 目录挂到 Agent 上。**
+
+### 9.1 FilesystemBackend 的作用
+
+DeepAgents 读取 Skill 时，本质上要访问一个文件夹。
+
+前面讲 Backend 时说过，`FilesystemBackend` 可以把 Agent 的文件系统映射到本地目录。配置 Skill 时，也要先告诉 Agent：技能文件夹在哪里。
+
+这个示例的核心链路是：用户请求 -> Agent 读取 Skill 元数据 -> 按需加载 `SKILL.md` -> 根据技能规则生成回复。
+
+示例开头先完成环境变量加载和模型初始化：
+
+```python
+from pathlib import Path
+
+from deepagents import create_deep_agent
+from deepagents.backends import FilesystemBackend
+from dotenv import find_dotenv, load_dotenv
+from langchain.chat_models import init_chat_model
+
+load_dotenv(find_dotenv())
+
+llm = init_chat_model(model="qwen-max", model_provider="openai")
+```
+
+### 9.2 创建 FilesystemBackend
+
+Skill 文件需要通过 Backend 暴露给 Agent。示例中把当前 Python 文件所在目录作为根目录，后续 `skills` 路径都相对于它查找。
+
+```python
+# Skill 文件需要通过 Backend 暴露给 Agent
+# 当前文件在 examples/ 下，所以 current_dir 指向 examples/
+current_dir = Path(__file__).parent.resolve()
+
+file_backend = FilesystemBackend(
+    # Agent 能访问的文件系统根目录
+    root_dir=current_dir,
+    # 开启虚拟沙箱，限制 Agent 只能在这个根目录下访问文件
+    virtual_mode=True,
+)
+```
+
+这段代码表示：
+
+| 配置                   | 含义                                                |
+| ---------------------- | --------------------------------------------------- |
+| `root_dir=current_dir` | 把当前示例文件所在目录作为文件系统根目录            |
+| `virtual_mode=True`    | 开启虚拟沙箱，限制 Agent 只能在这个根目录下访问文件 |
+
+### 9.3 注册 skills 参数
+
+接着在 `create_deep_agent` 中同时配置 `backend` 和 `skills`。
+
+```python
+# skills=["skills"] 表示加载 current_dir/skills 目录下的技能包
+# 每个技能包至少需要一个 SKILL.md，模型会先读取元数据，再按需读取完整技能说明
+main_agent = create_deep_agent(
+    model=llm,
+    backend=file_backend,
+    skills=[
+        "skills",
+    ],
+    system_prompt="你是一个智能助手，可以使用 SKILL 技能",
+)
+```
+
+这里的 `"skills"` 是相对于 `file_backend.root_dir` 的目录名。
+
+如果本地结构是：
+
+```text
+examples/
+  15-skills-from-filesystem.py
+  skills/
+    emoji-translator/
+      SKILL.md
+    code-reviewer/
+      SKILL.md
+```
+
+那么 `skills=["skills"]` 就表示：去 `examples/skills` 目录下找技能。
+
+这里要分清三个路径概念：
+
+| 概念           | 示例                | 说明                                         |
+| -------------- | ------------------- | -------------------------------------------- |
+| 物理路径       | `examples/skills/`  | 本地磁盘上真正存放 Skill 的目录              |
+| Backend 根目录 | `examples/`         | `FilesystemBackend(root_dir=...)` 指向的位置 |
+| Agent 配置路径 | `skills=["skills"]` | 相对于 Backend 根目录的 Skill 目录           |
+
+也就是说，`skills=["skills"]` 不是随便写一个字符串，而是让 Agent 通过 Backend 去它能访问的文件系统中查找 `skills/` 目录。
+
+以 `emoji-translator/SKILL.md` 为例，文件开头的元数据大致是这样：
+
+```markdown
+---
+name: emoji-translator
+description: 当用户明确要求把自然语言翻译成 Emoji、把 Emoji 解释成文字，或要求“表情翻译/emoji 翻译”时使用。
+---
+```
+
+这里的 `description` 很关键。DeepAgents 会先根据 Skill 元数据判断是否需要加载完整的 `SKILL.md`，所以描述越清楚，模型越容易在合适的场景触发正确技能。
+
+### 9.4 执行调用示例
+
+```python
+# 这句话明确要求使用“表情翻译技能”，便于触发 emoji-translator/SKILL.md。
+query = "我早上起床晚了，赶公交车差点摔倒，还好最后到了公司。请你只用表情翻译技能。"
+
+# DeepAgents 沿用 messages 输入结构，最终回复在 messages 最后一条。
+result = main_agent.invoke(
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": query,
+            }
+        ]
+    }
+)
+
+print(f"最终输出结果：{result['messages'][-1].content}")
+```
+
+如果 `emoji-translator` 的 `description` 写得清楚，模型会根据 `emoji-translator/SKILL.md` 里的规则输出表情组合。
+
+在示例代码仓库根目录运行：
+
+```bash
+uv run examples/15-skills-from-filesystem.py
+```
+
+关键输出大致是：
+
+```text
+最终输出结果：🛌⏰🏃‍♀️🚌💨🏢
+```
+
+这个结果说明 `emoji-translator` 技能已经被触发：用户输入的“起晚、赶公交、到公司”被转换成了对应的 Emoji 序列。
+
+### 9.5 配置注意事项
+
+使用 DeepAgents Skills 时重点记住这些点：
+
+| 注意事项               | 说明                                                 |
+| ---------------------- | ---------------------------------------------------- |
+| 先配置 `backend`       | 没有文件系统 Backend，Agent 不知道去哪里找 Skill     |
+| `skills` 写目录名      | 写的是相对于 `FilesystemBackend.root_dir` 的技能目录 |
+| 文件夹名和 `name` 对齐 | 技能文件夹名建议等于 `SKILL.md` 中的 `name`          |
+| `description` 要清晰   | 它决定模型什么时候加载该 Skill                       |
+| 采用渐进式加载         | 先看 YAML 元数据，再按需读取完整 `SKILL.md`          |
+| Skill 不是越多越好     | 技能过多、功能重复，会降低触发稳定性                 |
+
+教学里给出的经验是：不要一次塞太多 Skill，尤其不要塞功能重复的 Skill。模型不是人类的插件管理器，技能太多时，它也会难以选择。
+
+### 9.6 常见问题排查
+
+如果 Skill 没有按预期触发，可以按下面几个方向检查：
+
+| 问题现象                    | 排查方向                                              |
+| --------------------------- | ----------------------------------------------------- |
+| Agent 完全不知道 Skill 存在 | 是否配置了 `FilesystemBackend`，`skills` 路径是否写对 |
+| Skill 目录存在但没有触发    | `description` 是否明确写出触发场景                    |
+| 触发了错误的 Skill          | 多个 Skill 的描述是否过于接近，职责是否重叠           |
+| 找不到资源或脚本            | `SKILL.md` 中的相对路径是否和 Skill 目录结构一致      |
+| 输出格式不稳定              | `SKILL.md` 是否写清楚输入边界、执行步骤和最终输出格式 |
+
+这里要记住一句话：Skill 不是自动插件系统，它主要靠元数据和提示词让模型判断“什么时候该用哪项能力”。
+
 ---
 
 **本章小结：**
@@ -863,16 +1036,17 @@ WebSocket 层负责把事件发给前端；中间件负责在 Agent 执行链路
 
 本章要掌握的重点有这些：
 
-| 知识点             | 结论                                           |
-| ------------------ | ---------------------------------------------- |
-| 中间件的位置       | 位于 Agent 与模型、工具、子智能体之间          |
-| 常用现成中间件     | 本章重点讲摘要压缩、模型调用限制、工具调用限制 |
-| 官方扩展方向       | 还包括脱敏、重试、降级、人工审批、工具筛选等   |
-| 自定义工具中间件   | 使用 `@wrap_tool_call` 包住工具调用            |
-| `handler(request)` | 在自定义中间件里继续执行目标工具               |
-| `thread_limit`     | 限制同一个 `thread_id` 下的累计调用            |
-| `run_limit`        | 限制单次执行里的调用                           |
-| `exit_behavior`    | 超限后选择继续、正常结束或抛异常               |
-| 配置位置           | 主智能体和子智能体都可以配置                   |
+| 知识点             | 结论                                                 |
+| ------------------ | ---------------------------------------------------- |
+| 中间件的位置       | 位于 Agent 与模型、工具、子智能体之间                |
+| 常用现成中间件     | 本章重点讲摘要压缩、模型调用限制、工具调用限制       |
+| 官方扩展方向       | 还包括脱敏、重试、降级、人工审批、工具筛选等         |
+| 自定义工具中间件   | 使用 `@wrap_tool_call` 包住工具调用                  |
+| `handler(request)` | 在自定义中间件里继续执行目标工具                     |
+| `thread_limit`     | 限制同一个 `thread_id` 下的累计调用                  |
+| `run_limit`        | 限制单次执行里的调用                                 |
+| `exit_behavior`    | 超限后选择继续、正常结束或抛异常                     |
+| 配置位置           | 主智能体和子智能体都可以配置                         |
+| Skills 配置        | 通过 Backend 暴露 Skill 目录，再用 `skills` 参数注册 |
 
-下一章会继续看另一种扩展能力：把 Skill 当成外置技能包接入 DeepAgents。
+从下一章开始，会正式进入「深度研搜」项目实战，把前面学过的子智能体、工具、Backend、中间件和 Skill 配置组合起来，搭建一个完整的企业级多智能体应用。

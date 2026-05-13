@@ -1218,7 +1218,7 @@ MCP 更关注“模型和外部能力怎么接”，A2A 更关注“Agent 和 Ag
 
 **考察点：**协议边界和系统拆分能力。
 
-**对应章节：**[26 LangGraph多智能体与A2A §1、A2A 协议与多智能体架构](26-LangGraph多智能体与A2A.md#_1、a2a-协议与多智能体架构)；[26 LangGraph多智能体与A2A §2、Supervisor 与 Handoff](26-LangGraph多智能体与A2A.md#_2、supervisor-与-handoff)；[26 LangGraph多智能体与A2A §3、Agent Skills（智能体技能）简介](26-LangGraph多智能体与A2A.md#_3、agent-skills%EF%BC%88智能体技能%EF%BC%89简介)
+**对应章节：**[26 LangGraph多智能体与A2A §1、A2A 协议与多智能体架构](26-LangGraph多智能体与A2A.md#_1、a2a-协议与多智能体架构)；[26 LangGraph多智能体与A2A §2、Supervisor 与 Handoff](26-LangGraph多智能体与A2A.md#_2、supervisor-与-handoff)；[26 LangGraph多智能体与A2A §3、Skills 与多智能体的边界](26-LangGraph多智能体与A2A.md#_3、skills-与多智能体的边界)；[27 Agent Skills智能体技能与AI编程工具实践](27-Agent%20Skills智能体技能与AI编程工具实践.md)
 
 **来源：**腾讯AI后台工程师一面（实际大厂面试题）
 
