@@ -27,12 +27,136 @@
       :root {
         --theme-color: #00c853;
         --sidebar-nav-link-color: #2c3e50;
+        --background: #ffffff;
+        --textColor: #34495e;
+        --borderColor: rgba(0, 0, 0, 0.08);
+        --blockQuoteColor: #667085;
+        --sidebarSublink: #505d6b;
+        --codeTextColor: #24292f;
+        --codeBackgroundColor: #f6f8fa;
+        --highlightColor: #0a7f35;
+        --tableAltBackground: #f6f8fa;
+        --diagramBackground: #ffffff;
+        --diagramBorderColor: rgba(0, 0, 0, 0.08);
+        --toggleRing: rgba(0, 200, 83, 0.35);
+        --toogleImage: url("https://cdn.jsdelivr.net/npm/docsify-darklight-theme@3.2.0/icons/moon.svg");
+        --tokenComment: #6e7781;
+        --tokenPunctuation: #57606a;
+        --tokenKeyword: #cf222e;
+        --tokenFunction: #8250df;
+        --tokenString: #0a3069;
+        --tokenNumber: #0550ae;
+        --tokenOperator: #cf222e;
+      }
+      html,
+      body,
+      main,
+      .content,
+      .sidebar,
+      .sidebar-toggle {
+        background: var(--background);
+        color: var(--textColor);
       }
       .app-name-link img {
         max-width: 200px;
       }
+      .sidebar {
+        border-right-color: var(--borderColor);
+      }
       .sidebar-nav li {
         margin: 6px 0;
+      }
+      .sidebar ul li a,
+      .sidebar ul li p,
+      .app-sub-sidebar li::before {
+        color: var(--sidebarSublink);
+      }
+      .sidebar ul li.active > a,
+      .sidebar ul li a:hover,
+      .markdown-section a,
+      .search .search-keyword,
+      .search a:hover {
+        color: var(--theme-color);
+      }
+      .search {
+        border-bottom-color: var(--borderColor);
+      }
+      .search input {
+        background: var(--background);
+        border-color: var(--borderColor);
+        color: var(--textColor);
+      }
+      .markdown-section,
+      .markdown-section h1,
+      .markdown-section h2,
+      .markdown-section h3,
+      .markdown-section h4,
+      .markdown-section h5,
+      .markdown-section h6,
+      .markdown-section p,
+      .markdown-section li,
+      .markdown-section strong,
+      .markdown-section table,
+      .anchor span {
+        color: var(--textColor);
+      }
+      .markdown-section blockquote {
+        border-left-color: var(--theme-color);
+        color: var(--blockQuoteColor);
+      }
+      .markdown-section hr,
+      .markdown-section td,
+      .markdown-section th,
+      .markdown-section tr {
+        border-color: var(--borderColor);
+      }
+      .markdown-section tr:nth-child(2n),
+      .markdown-section p.tip,
+      .markdown-section p.warn {
+        background: var(--tableAltBackground);
+      }
+      .markdown-section code {
+        background: var(--codeBackgroundColor);
+        color: var(--highlightColor);
+      }
+      .markdown-section pre {
+        background: var(--codeBackgroundColor);
+        border: 1px solid var(--borderColor);
+      }
+      .markdown-section pre > code {
+        background: transparent;
+        color: var(--codeTextColor);
+      }
+      .token.cdata,
+      .token.comment,
+      .token.doctype,
+      .token.prolog {
+        color: var(--tokenComment);
+      }
+      .token.punctuation {
+        color: var(--tokenPunctuation);
+      }
+      .token.keyword,
+      .token.boolean,
+      .token.tag {
+        color: var(--tokenKeyword);
+      }
+      .token.function,
+      .token.attr-name {
+        color: var(--tokenFunction);
+      }
+      .token.string,
+      .token.attr-value,
+      .token.selector {
+        color: var(--tokenString);
+      }
+      .token.number,
+      .token.property {
+        color: var(--tokenNumber);
+      }
+      .token.operator,
+      .token.important {
+        color: var(--tokenOperator);
       }
       .markdown-section img {
         max-width: 100%;
@@ -43,11 +167,48 @@
       .markdown-section .mermaid {
         margin: 1.5em 0;
         overflow-x: auto;
+        padding: 16px;
+        border: 1px solid var(--diagramBorderColor);
+        border-radius: 8px;
+        background: var(--diagramBackground);
         text-align: center;
       }
       .markdown-section .mermaid svg {
         max-width: 100%;
         height: auto;
+      }
+      #docsify-darklight-theme {
+        position: fixed;
+        top: 14px;
+        right: 88px;
+        z-index: 100;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--borderColor);
+        border-radius: 999px;
+        background-color: var(--background);
+        background-image: var(--toogleImage);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 18px 18px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+        cursor: pointer;
+      }
+      #docsify-darklight-theme:hover {
+        border-color: var(--theme-color);
+        box-shadow: 0 0 0 4px var(--toggleRing);
+      }
+      #docsify-darklight-theme p {
+        visibility: hidden;
+        margin: 0;
+      }
+      @media screen and (max-width: 768px) {
+        #docsify-darklight-theme {
+          top: 12px;
+          right: 72px;
+          width: 34px;
+          height: 34px;
+        }
       }
     </style>
   </head>
@@ -57,14 +218,120 @@
       (function () {
         var isGitHubPages = /github\.io$/i.test(location.hostname);
         var mermaidIndex = 0;
+        var savedTheme = localStorage.getItem("DARK_LIGHT_THEME");
+        var prefersDark =
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var initialTheme =
+          savedTheme === "dark" || (!savedTheme && prefersDark)
+            ? "dark"
+            : "light";
+        var giscusTheme = initialTheme === "dark" ? "dark" : "light";
+
+        function getDocsTheme() {
+          var theme = localStorage.getItem("DARK_LIGHT_THEME");
+          if (theme === "dark" || theme === "light") return theme;
+          return prefersDark ? "dark" : "light";
+        }
+
+        function syncGiscusTheme() {
+          var frame = document.querySelector("iframe.giscus-frame");
+          if (!frame || !frame.contentWindow) return;
+          frame.contentWindow.postMessage(
+            {
+              giscus: {
+                setConfig: {
+                  theme: getDocsTheme() === "dark" ? "dark" : "light",
+                },
+              },
+            },
+            "https://giscus.app",
+          );
+        }
+
         var config = {
           name: "AI 智能体实战速成指南",
           repo: "https://github.com/didilili/ai-agents-from-zero",
+          themeColor: "#00c853",
           loadSidebar: true,
           loadNavbar: false,
           subMaxLevel: 4, // 侧边栏显示到四级标题 ####（2=只显示到 ##）
           auto2top: true,
           homepage: "README.md",
+          plugins: [
+            function (hook) {
+              hook.doneEach(function () {
+                window.setTimeout(syncGiscusTheme, 500);
+                var toggle = document.getElementById("docsify-darklight-theme");
+                if (toggle && !toggle.dataset.giscusSyncBound) {
+                  toggle.dataset.giscusSyncBound = "true";
+                  toggle.addEventListener("click", function () {
+                    window.setTimeout(syncGiscusTheme, 100);
+                  });
+                }
+              });
+            },
+          ],
+          darklightTheme: {
+            defaultTheme: initialTheme,
+            siteFont:
+              '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            codeFontFamily:
+              'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
+            bodyFontSize: "16px",
+            dark: {
+              accent: "#00c853",
+              toogleBackground: "#12221b",
+              background: "#0f1419",
+              textColor: "#d7e4df",
+              codeTextColor: "#e6edf3",
+              codeBackgroundColor: "#111827",
+              borderColor: "rgba(148, 163, 184, 0.24)",
+              blockQuoteColor: "#9fb3aa",
+              highlightColor: "#86efac",
+              sidebarSublink: "#b7c7c0",
+              codeTypeColor: "#cbd5e1",
+              tableAltBackground: "#141b23",
+              diagramBackground: "#f8fafc",
+              diagramBorderColor: "#d9e2ec",
+              toggleRing: "rgba(0, 200, 83, 0.24)",
+              tokenComment: "#8b949e",
+              tokenPunctuation: "#c9d1d9",
+              tokenKeyword: "#ff7b72",
+              tokenFunction: "#d2a8ff",
+              tokenString: "#a5d6ff",
+              tokenNumber: "#79c0ff",
+              tokenOperator: "#ff7b72",
+              toogleImage:
+                "url(https://cdn.jsdelivr.net/npm/docsify-darklight-theme@3.2.0/icons/sun.svg)",
+            },
+            light: {
+              accent: "#00c853",
+              toogleBackground: "#0f1419",
+              background: "#ffffff",
+              textColor: "#34495e",
+              codeTextColor: "#24292f",
+              codeBackgroundColor: "#f6f8fa",
+              borderColor: "rgba(0, 0, 0, 0.08)",
+              blockQuoteColor: "#667085",
+              highlightColor: "#0a7f35",
+              sidebarSublink: "#505d6b",
+              codeTypeColor: "#57606a",
+              tableAltBackground: "#f6f8fa",
+              diagramBackground: "#ffffff",
+              diagramBorderColor: "rgba(0, 0, 0, 0.08)",
+              toggleRing: "rgba(0, 200, 83, 0.35)",
+              tokenComment: "#6e7781",
+              tokenPunctuation: "#57606a",
+              tokenKeyword: "#cf222e",
+              tokenFunction: "#8250df",
+              tokenString: "#0a3069",
+              tokenNumber: "#0550ae",
+              tokenOperator: "#cf222e",
+              toogleImage:
+                "url(https://cdn.jsdelivr.net/npm/docsify-darklight-theme@3.2.0/icons/moon.svg)",
+            },
+          },
           search: {
             paths: "auto",
             placeholder: "搜索文档",
@@ -86,7 +353,7 @@
           count: {
             countable: true,
             fontsize: "0.9em",
-            color: "rgb(90,90,90)",
+            color: "var(--textColor)",
             language: "chinese",
           },
           markdown: {
@@ -118,7 +385,7 @@
             strict: "0",
             emitMetadata: "0",
             inputPosition: "bottom",
-            theme: "preferred_color_scheme",
+            theme: giscusTheme,
             lang: "zh-CN",
             loading: "lazy",
           },
@@ -145,6 +412,7 @@
     <script src="https://cdn.jsdelivr.net/npm/docsify-katex@2.0.2/dist/docsify-katex.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docsify-count/dist/countable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@3.2.0/dist/index.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/docsify-giscus@1.0.2/dist/giscus.css"
