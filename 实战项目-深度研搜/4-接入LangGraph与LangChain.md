@@ -9,7 +9,7 @@
 - 理解 LangGraph 子智能体为什么必须包含可累加的 `messages` 状态字段。
 - 能判断复杂子任务应该交给 LangGraph，还是交给 LangChain Agent。
 
-**学习建议：** 这一章不是重新学习 LangGraph 或 LangChain，而是学习如何复用前面已经学过的能力。如果你对 `StateGraph`、`add_messages`、条件边、`@tool`、`create_agent()` 还不熟，可以先回看本仓库中对应章节。
+**学习建议：** 这一章学的是“复用现成能力”，不是重新学 LangGraph 或 LangChain。读的时候重点看 `CompiledSubAgent` 如何把已有图、Agent 或 Runnable 包成 DeepAgents 能调度的子智能体。如果 `StateGraph`、`add_messages`、条件边、`@tool`、`create_agent()` 还不熟，先回看对应章节，否则这里会像在看一层薄薄的适配胶水。
 
 **对应代码分支：** `04-deepagents-langgraph-langchain`
 

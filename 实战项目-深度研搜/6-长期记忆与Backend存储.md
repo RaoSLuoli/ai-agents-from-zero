@@ -8,7 +8,7 @@
 - 区分短期记忆和长期记忆，知道二者差异不在“保存多久”，而在“保存什么”。
 - 区分 `checkpointer`、`StateBackend`、`FilesystemBackend`、`StoreBackend`、`CompositeBackend` 的作用。
 
-**学习建议：** 这一章不要把 Backend 简单理解成“保存聊天记录”。它更像 DeepAgents 给 Agent 准备的文件柜：Agent 仍然用读写文件的方式工作，但文件柜背后可以接状态、本地磁盘、KV Store，也可以按路径分流到不同地方。
+**学习建议：** Backend 不只是“保存聊天记录”，更像给 Agent 准备的文件柜。读这一章时比较几种后端背后的取舍：状态里存、磁盘里存、KV Store 里存、按路径分流存。重点看 Agent 仍然用文件读写的方式工作，而 Backend 决定这些文件最终落到哪里、能不能跨会话复用。
 
 **对应代码分支：** `06-deepagents-backends-memory`
 

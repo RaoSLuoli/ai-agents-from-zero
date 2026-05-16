@@ -8,7 +8,7 @@
 - 掌握向量数据库、全文检索、`mapping`、`collection`、`payload` 等核心概念。
 - 看懂项目里的 `QdrantClientManager` 和 `ESClientManager` 是如何封装、初始化与测试的。
 
-**学习建议：** 这一篇建议按 **“先理解 Qdrant 做什么 → 再理解 ES 做什么 → 最后回到客户端代码和最小使用链路”** 的顺序阅读。因为这两类基础服务都服务于“检索”，只是一个偏语义相似度召回，一个偏全文文本匹配。
+**学习建议：** Qdrant 和 ES 都叫检索，但不要把它们混成一个东西。读这篇时先记住分工：Qdrant 更适合语义相似度召回，ES 更适合全文匹配和精确过滤。跑 quickstart 的目的不是熟练所有 API，而是看清 collection / point / payload 和 index / document / mapping 分别在项目里对应什么。
 
 **对应代码分支：** `05-qdrant-es`
 
