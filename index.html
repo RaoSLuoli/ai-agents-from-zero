@@ -232,14 +232,142 @@
         max-height: 520px;
         object-fit: contain;
       }
+      html.mermaid-viewer-open,
+      html.mermaid-viewer-open body {
+        overflow: hidden;
+      }
       .markdown-section .mermaid {
         margin: 1.5em 0;
-        overflow-x: auto;
+        position: relative;
         text-align: center;
+      }
+      .markdown-section .mermaid:not(.mermaid-viewer) {
+        overflow-x: auto;
       }
       .markdown-section .mermaid svg {
         max-width: 100%;
         height: auto;
+      }
+      .markdown-section .mermaid-viewer {
+        overflow: hidden;
+        border: 1px solid rgba(52, 73, 94, 0.14);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.72);
+      }
+      .markdown-section .mermaid-viewer__canvas {
+        overflow: hidden;
+        padding: 14px;
+        cursor: grab;
+        touch-action: none;
+      }
+      .markdown-section .mermaid-viewer.is-dragging .mermaid-viewer__canvas {
+        cursor: grabbing;
+      }
+      .markdown-section .mermaid-viewer__canvas svg {
+        display: inline-block;
+        transition: transform 0.16s ease;
+        will-change: transform;
+      }
+      .markdown-section .mermaid-viewer.is-dragging .mermaid-viewer__canvas svg {
+        transition: none;
+      }
+      .markdown-section .mermaid-viewer__toolbar {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 2;
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid rgba(52, 73, 94, 0.16);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 8px 24px rgba(31, 45, 61, 0.14);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-4px);
+        transition: opacity 0.16s ease, transform 0.16s ease;
+      }
+      .markdown-section .mermaid-viewer:hover .mermaid-viewer__toolbar,
+      .markdown-section .mermaid-viewer:focus-within .mermaid-viewer__toolbar,
+      .markdown-section .mermaid-viewer.is-window-fullscreen .mermaid-viewer__toolbar,
+      .markdown-section .mermaid-viewer.is-native-fullscreen .mermaid-viewer__toolbar,
+      .markdown-section .mermaid-viewer.is-zoomed .mermaid-viewer__toolbar {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+      .markdown-section .mermaid-viewer__button {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        padding: 0;
+        color: #34495e;
+        background: transparent;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .markdown-section .mermaid-viewer__button:hover,
+      .markdown-section .mermaid-viewer__button:focus-visible {
+        background: rgba(0, 200, 83, 0.1);
+        outline: none;
+      }
+      .markdown-section .mermaid-viewer__button svg {
+        width: 18px;
+        height: 18px;
+        max-width: none;
+      }
+      .markdown-section .mermaid-viewer.is-window-fullscreen,
+      .markdown-section .mermaid-viewer.is-native-fullscreen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        background: #fff;
+      }
+      .markdown-section
+        .mermaid-viewer.is-window-fullscreen
+        .mermaid-viewer__canvas,
+      .markdown-section
+        .mermaid-viewer.is-native-fullscreen
+        .mermaid-viewer__canvas {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+        padding: 56px 24px 24px;
+      }
+      .markdown-section
+        .mermaid-viewer.is-window-fullscreen
+        .mermaid-viewer__toolbar,
+      .markdown-section
+        .mermaid-viewer.is-native-fullscreen
+        .mermaid-viewer__toolbar {
+        top: 14px;
+        right: 14px;
+      }
+      .markdown-section
+        .mermaid-viewer.is-window-fullscreen
+        .mermaid-viewer__toolbar {
+        right: 88px;
+      }
+      .markdown-section .mermaid-viewer.is-window-fullscreen svg,
+      .markdown-section .mermaid-viewer.is-native-fullscreen svg {
+        max-width: none;
+      }
+      @media (hover: none) {
+        .markdown-section .mermaid-viewer__toolbar {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0);
+        }
       }
     </style>
   </head>
@@ -280,6 +408,11 @@
             fontsize: "0.9em",
             color: "rgb(90,90,90)",
             language: "chinese",
+          },
+          mermaidViewer: {
+            minScale: 0.5,
+            maxScale: 5,
+            zoomStep: 1.2,
           },
           darklightTheme: {
             siteFont: "Source Sans Pro",
@@ -395,6 +528,7 @@
     <script>
       mermaid.initialize({ startOnLoad: false });
     </script>
+    <script src="lib/plugins/mermaid-viewer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@3"></script>

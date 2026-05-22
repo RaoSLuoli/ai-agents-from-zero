@@ -755,7 +755,7 @@ chat_name = "电商行业助手"
 
 ### 7.1 读取 RAGFlow 环境变量
 
-项目对应文件路径：`deepsearch-agents/app/rawflow/rag_config.py`。
+项目对应文件路径：`deepsearch-agents/app/ragflow/rag_config.py`。
 
 ```python
 """
@@ -788,7 +788,7 @@ def _load_ragflow_env() -> Tuple[Optional[str], Optional[str]]:
 
 ### 7.2 可选扩展：用代码创建知识库
 
-项目对应文件路径：`deepsearch-agents/app/rawflow/knowledge_demo.py`
+项目对应文件路径：`deepsearch-agents/app/ragflow/knowledge_demo.py`
 
 前面主要通过 RAGFlow 页面创建知识库，这是学习阶段最直观的方式。但 RAGFlow SDK 也支持通过代码创建知识库。
 
@@ -797,7 +797,7 @@ def _load_ragflow_env() -> Tuple[Optional[str], Optional[str]]:
 核心代码可以这样理解：
 
 ```python
-from app.rawflow.rag_config import _load_ragflow_env
+from app.ragflow.rag_config import _load_ragflow_env
 from ragflow_sdk import RAGFlow
 
 
@@ -896,7 +896,7 @@ from langchain_core.tools import tool
 from ragflow_sdk import RAGFlow
 
 from app.api.monitor import monitor
-from app.rawflow.rag_config import _load_ragflow_env
+from app.ragflow.rag_config import _load_ragflow_env
 
 # 模块级复用 RAGFlow 客户端，避免每次工具调用都重新初始化 SDK 对象
 api_key, base_url = _load_ragflow_env()
@@ -1223,10 +1223,10 @@ app/prompt/prompts.yml
   -> app/agent/prompts.py
       -> sub_agents_content
 
-app/rawflow/rag_config.py
+app/ragflow/rag_config.py
   -> _load_ragflow_env
 
-app/rawflow/knowledge_demo.py
+app/ragflow/knowledge_demo.py
   -> create_knowledge_base
   -> upload_file_to_knowledge_base
 
@@ -1300,7 +1300,7 @@ if __name__ == "__main__":
 运行知识库示例：
 
 ```bash
-uv run -m app.rawflow.knowledge_demo
+uv run -m app.ragflow.knowledge_demo
 ```
 
 如果创建成功，终端会打印类似下面的内容。实际字段很多，不需要逐个背下来，先看几个关键字段就够了：
