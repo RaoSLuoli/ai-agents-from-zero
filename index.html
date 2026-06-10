@@ -220,6 +220,94 @@
         visibility: hidden;
         margin: 0;
       }
+      .announcement-bubble {
+        position: fixed;
+        top: 64px;
+        right: 88px;
+        z-index: 1001;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        max-width: min(600px, calc(100vw - 132px));
+        min-height: 34px;
+        padding: 0 9px 0 12px;
+        color: var(--textColor);
+        background: var(--background);
+        border: 1px solid var(--borderColor);
+        border-radius: 999px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.13);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        background: color-mix(in srgb, var(--background) 94%, transparent);
+        border: 1px solid
+          color-mix(in srgb, var(--accent) 24%, var(--borderColor));
+      }
+      .announcement-bubble__content {
+        display: inline-flex;
+        min-width: 0;
+        align-items: center;
+        gap: 9px;
+        color: var(--textColor);
+        text-decoration: none;
+      }
+      .announcement-bubble__content:hover,
+      .announcement-bubble__content:focus-visible {
+        color: var(--textColor);
+        outline: none;
+      }
+      .announcement-bubble:hover,
+      .announcement-bubble:focus-visible {
+        color: var(--textColor);
+        border-color: color-mix(in srgb, var(--accent) 46%, var(--borderColor));
+        box-shadow: 0 14px 34px rgba(0, 200, 83, 0.18);
+        outline: none;
+      }
+      .announcement-bubble__dot {
+        width: 8px;
+        height: 8px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+      }
+      .announcement-bubble__text {
+        overflow: hidden;
+        font-size: 13px;
+        line-height: 1.35;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .announcement-bubble__close {
+        display: grid;
+        width: 22px;
+        height: 22px;
+        flex: 0 0 auto;
+        place-items: center;
+        padding: 0;
+        margin-left: 2px;
+        color: var(--sidebarSublink);
+        font-size: 14px;
+        line-height: 1;
+        background: var(--codeBackgroundColor);
+        background: color-mix(
+          in srgb,
+          var(--codeBackgroundColor) 88%,
+          var(--background)
+        );
+        border: 0;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .announcement-bubble__close:hover,
+      .announcement-bubble__close:focus-visible {
+        color: var(--headingColor);
+        background: color-mix(
+          in srgb,
+          var(--accent) 12%,
+          var(--codeBackgroundColor)
+        );
+        outline: none;
+      }
       .app-name-link img {
         max-width: 200px;
       }
@@ -268,7 +356,10 @@
         transition: transform 0.16s ease;
         will-change: transform;
       }
-      .markdown-section .mermaid-viewer.is-dragging .mermaid-viewer__canvas svg {
+      .markdown-section
+        .mermaid-viewer.is-dragging
+        .mermaid-viewer__canvas
+        svg {
         transition: none;
       }
       .markdown-section .mermaid-viewer__toolbar {
@@ -286,12 +377,18 @@
         opacity: 0;
         pointer-events: none;
         transform: translateY(-4px);
-        transition: opacity 0.16s ease, transform 0.16s ease;
+        transition:
+          opacity 0.16s ease,
+          transform 0.16s ease;
       }
       .markdown-section .mermaid-viewer:hover .mermaid-viewer__toolbar,
       .markdown-section .mermaid-viewer:focus-within .mermaid-viewer__toolbar,
-      .markdown-section .mermaid-viewer.is-window-fullscreen .mermaid-viewer__toolbar,
-      .markdown-section .mermaid-viewer.is-native-fullscreen .mermaid-viewer__toolbar,
+      .markdown-section
+        .mermaid-viewer.is-window-fullscreen
+        .mermaid-viewer__toolbar,
+      .markdown-section
+        .mermaid-viewer.is-native-fullscreen
+        .mermaid-viewer__toolbar,
       .markdown-section .mermaid-viewer.is-zoomed .mermaid-viewer__toolbar {
         opacity: 1;
         pointer-events: auto;
@@ -369,6 +466,13 @@
           transform: translateY(0);
         }
       }
+      @media (max-width: 768px) {
+        .announcement-bubble {
+          top: 70px;
+          right: 16px;
+          max-width: calc(100vw - 32px);
+        }
+      }
     </style>
   </head>
   <body>
@@ -421,6 +525,12 @@
             minScale: 0.5,
             maxScale: 5,
             zoomStep: 1.2,
+          },
+          announcementBubble: {
+            enabled: true,
+            text: "2026-06-10：教程全面升级，交流群开放加入，全新内容即将来袭！点击查看详情",
+            link: "#/教程更新日志.md",
+            storageKey: "aafz-announcement-v1",
           },
           darklightTheme: {
             siteFont: "Source Sans Pro",
@@ -528,6 +638,7 @@
         window.$docsify = config;
       })();
     </script>
+    <script src="lib/plugins/announcement-bubble.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: false });

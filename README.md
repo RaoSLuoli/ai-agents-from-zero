@@ -29,6 +29,29 @@
 
 ---
 
+## 🤝 项目赞助
+
+<table>
+<tr>
+<td width="220" align="center" valign="middle">
+  <a href="https://passport.compshare.cn/register?referral_code=KyLCDhVe3j5E9o1XBWmIku&ytag=GPU_YY_YX_git_ai-agents-from-zero">
+    <img src="./images/sponsor-compshare-agent-plan.jpg" alt="优云智算" width="160">
+  </a>
+  <br>
+  <sub>高性价比 Agent Plan 首选</sub>
+</td>
+<td valign="middle">
+
+感谢 <a href="https://www.compshare.cn/coding-plan"><strong>优云智算</strong></a> 赞助本项目！优云智算是 UCloud 旗下 AI 云平台。主打包月、按次的高性价比国模 Agent Plan 套餐，低至 49 元/月起；同时提供官转稳定海外模型，支持接入 Claude Code、Codex 及 API 调用，面向企业提供高并发、7\*24 技术支持与自助开票。
+
+🎁 通过 <a href="https://passport.compshare.cn/register?referral_code=KyLCDhVe3j5E9o1XBWmIku&ytag=GPU_YY_YX_git_ai-agents-from-zero"><strong>此链接</strong></a> 注册的用户，可得免费 5 元平台体验金。
+
+</td>
+</tr>
+</table>
+
+---
+
 ## ✨ 教程亮点
 
 - **🌱 全网首个系统开源的 AI 智能体教程**：这是一套长期维护的 AI 大模型应用开发路线图。市面上不缺零散帖子，也不缺收费训练营，但真正系统、持续更新，并且覆盖 **教程 + 源码 + 实战项目 + 面试题库** 的 AI 大模型应用教程极少。本仓库要做的就是把这条路线公开、做深、做完整，陪你从入门、进阶、项目实战一路成长。
