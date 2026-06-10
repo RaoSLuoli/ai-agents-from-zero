@@ -38,7 +38,7 @@
     <img src="./images/sponsor-compshare-agent-plan.jpg" alt="优云智算" width="160">
   </a>
   <br>
-  <sub>高性价比 Agent Plan 首选</sub>
+  <sub>高性价比 Agent Plan 优选</sub>
 </td>
 <td valign="middle">
 
@@ -205,6 +205,12 @@
    **注意**：必须在**项目根目录**执行 `python`，否则会读不到 `.env`。若不想用云 API，可使用 [Ollama 本地模型](新手入门与常见问题.md#_54-不想用云-api：用本地-ollama（无需-key）)（无需 Key）。
 
 遇到 `ModuleNotFoundError`、API Key 报错、找不到 `.env` 等，请查看 [新手入门与常见问题 - 常见问题与解决](新手入门与常见问题.md#_6、常见问题与解决)。
+
+---
+
+## 💬 交流社群
+
+想和更多读者共同交流 **AI 编程、Agent / RAG 实战、面试经验**？欢迎到 [GitHub 入群申请帖](https://github.com/didilili/ai-agents-from-zero/issues/46) 留言申请加入微信交流群。
 
 ---
 
